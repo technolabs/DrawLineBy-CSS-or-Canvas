@@ -1,0 +1,151 @@
+</html>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <style>
+    #canvas {
+        position: absolute;
+        margin-top: -8px;
+    }
+    
+    .draggable {
+        font-size: x-small;
+    }
+    
+    .right-box .streams {
+        margin-left: 150px;
+    }
+    
+    .right-box .desc {
+        line-height: 50px;
+    }
+    
+    .left {
+        margin-top: 100px;
+    }
+    
+    .display-flex {
+        display: flex;
+    }
+    
+    .streams {
+        padding: 2px;
+    }
+    
+    .hub-link-con img {
+        height: 50px;
+    }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" width="400px" height="400px"></canvas>
+    <div class="display-flex hub-link-con" style="padding:50px;">
+        <div class="display-flex left">
+            <div class="streams">
+                <div id="0" class="draggable">0</div>
+                <div id="1" class="draggable">1</div>
+                <div id="2" class="draggable">2</div>
+                <div id="3" class="draggable">3</div>
+            </div>
+        </div>
+        <div>
+            <div id="wrap0" class="display-flex right-box">
+                <div class="streams">
+                    <div id="0r" class="draggable">0</div>
+                    <div id="1r" class="draggable">1</div>
+                    <div id="2r" class="draggable">2</div>
+                    <div id="3r" class="draggable">3</div>
+                </div>
+            </div>
+            <br>
+            <div id="wrap1" class="display-flex right-box">
+                <div class="streams">
+                    <div id="0r" class="draggable">0</div>
+                    <div id="1r" class="draggable">1</div>
+                    <div id="2r" class="draggable">2</div>
+                    <div id="3r" class="draggable">3</div>
+                </div>
+            </div>
+            <br>
+            <div id="wrap2" class="display-flex right-box">
+                <div class="streams ">
+                    <div id="0r" class="draggable">0</div>
+                    <div id="1r" class="draggable">1</div>
+                    <div id="2r" class="draggable">2</div>
+                    <div id="3r" class="draggable">3</div>
+                </div>
+            </div>
+            <br>
+            <div id="wrap3" class="display-flex right-box">
+                <div class="streams">
+                    <div id="0r" class="draggable">0</div>
+                    <div id="1r" class="draggable">1</div>
+                    <div id="2r" class="draggable">2</div>
+                    <div id="3r" class="draggable">3</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    var stream_length = 4,
+        remote_length = 4,
+        hubStream = {},
+        remote = [],
+        canvas = $("#canvas")[0],
+        ctx = canvas.getContext("2d");
+    ctx.lineWidth = 1;
+
+    for (var i = 0; i < stream_length; i++) {
+        var s = "#" + i;
+        hubStream[i] = $(s);
+    }
+
+    for (var i = 0; i < remote_length; i++) {
+        remote.push({
+            stream: {}
+        });
+        for (var k = 0; k < stream_length; k++) {
+            var s = "#wrap" + i + " #" + k + "r";
+            remote[i]["stream"][k] = $(s);
+        }
+    }
+
+    function connect(connectors) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (var i = 0; i < connectors.length; i++) {
+            var c = connectors[i],
+                eFrom = c.from,
+                eTo = c.to,
+                pos1 = eFrom.offset(),
+                pos2 = eTo.offset();
+            ctx.beginPath();
+            ctx.moveTo(pos1.left + eFrom.width() - 5, pos1.top + eFrom.height() / 2);
+            ctx.lineTo(pos2.left - 9, pos2.top + eTo.height() / 2);
+            ctx.stroke();
+        }
+    }
+
+
+
+    var connectors = [{
+        from: hubStream["0"],
+        to: remote["0"]["stream"]["1"]
+    }, {
+        from: hubStream["1"],
+        to: remote["3"]["stream"]["0"]
+    }, {
+        from: hubStream["2"],
+        to: remote["1"]["stream"]["3"]
+    }, {
+        from: hubStream["3"],
+        to: remote["2"]["stream"]["2"]
+    }];
+
+    connect(connectors);
+    </script>
+</body>
+
+</html>

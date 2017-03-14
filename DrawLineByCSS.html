@@ -1,0 +1,120 @@
+</html>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <style>
+    .draggable {
+        font-size: x-small;
+    }
+    
+    .right-box .streams {
+        margin-left: 150px;
+    }
+    
+    .right-box .desc {
+        line-height: 50px;
+    }
+    
+    .display-flex {
+        display: flex;
+    }
+    
+    .streams {
+        padding: 10px;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="display-flex hub-link-con" style="padding:50px;">
+        <div class="display-flex left">
+            <div class="streams">
+                <div id="left1" class="draggable">1</div>
+                <div id="left2" class="draggable">2</div>
+                <div id="left3" class="draggable">3</div>
+                <div id="left4" class="draggable">4</div>
+            </div>
+        </div>
+        <div>
+            <div id="wrap0" class="display-flex right-box">
+                <div class="streams">
+                    <div id="right1" class="draggable">1</div>
+                    <div id="right2" class="draggable">2</div>
+                    <div id="right3" class="draggable">3</div>
+                    <div id="right4" class="draggable">4</div>
+                    <div id="right5" class="draggable">5</div>
+                    <div id="right6" class="draggable">6</div>
+                </div>
+            </div>
+            <br>
+        </div>
+    </div>
+    <script>
+    var connector = {
+        connect: function(div1, div2, color, thickness) {
+            var off1 = this.getOffset(div1),
+                off2 = this.getOffset(div2),
+                x1 = off1.left + off1.width / 2;
+            var y1 = off1.top + off1.height / 2,
+                x2 = off2.left + off2.width / 2,
+                y2 = off2.top + off1.height / 2;
+            // distance
+            var length = Math.sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)));
+            // center
+            var cx = ((x1 + x2) / 2) - (length / 2);
+            var cy = ((y1 + y2) / 2) - (thickness / 2);
+            // angle
+            var angle = Math.atan2((y1 - y2), (x1 - x2)) * (180 / Math.PI);
+            // make hr
+            var htmlLine = "<div class='hub-remote-lines' style='padding:0px; margin:0px; height:" + thickness + "px; background-color:" + color + "; line-height:1px; position:absolute; left:" + cx + "px; top:" + cy + "px; width:" + length + "px; -moz-transform:rotate(" + angle + "deg); -webkit-transform:rotate(" + angle + "deg); -o-transform:rotate(" + angle + "deg); -ms-transform:rotate(" + angle + "deg); transform:rotate(" + angle + "deg);' />";
+
+            document.body.innerHTML += htmlLine;
+
+        },
+        getOffset: function(el) {
+            var rect = el.getBoundingClientRect();
+            return {
+                left: rect.left + window.pageXOffset,
+                top: rect.top + window.pageYOffset,
+                width: rect.width || el.offsetWidth,
+                height: rect.height || el.offsetHeight
+            };
+        },
+        drawLines: function(lineArr) {
+            var self = this;
+            $('.hub-remote-lines').remove();
+            setTimeout(function() {
+                for (var c = 0; c < lineArr.length; c++) {
+                    var from = document.getElementById(lineArr[c].from);
+                    var to = document.getElementById(lineArr[c].to);
+                    self.connect(from, to, "#000", 1);
+                }
+            }, 200);
+        }
+    };
+    var lines = [{
+        from: "left1",
+        to: "right2"
+    }, {
+        from: "left2",
+        to: "right4"
+    }, {
+        from: "left3",
+        to: "right1"
+    }, {
+        from: "left4",
+        to: "right5"
+    }, {
+        from: "left4",
+        to: "right1"
+    }, {
+        from: "left4",
+        to: "right6"
+    }];
+    connector.drawLines(lines);
+    </script>
+</body>
+
+</html>
